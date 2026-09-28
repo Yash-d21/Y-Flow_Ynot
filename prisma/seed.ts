@@ -1,5 +1,6 @@
 import { hash } from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
+import { DEMO_PASSWORD } from "../src/lib/demo-accounts";
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,7 @@ async function main() {
     data: { name: "Google" },
   });
 
-  const passwordHash = await hash("password123", 10);
+  const passwordHash = await hash(DEMO_PASSWORD, 10);
 
   const staff = await prisma.user.create({
     data: {
@@ -137,8 +138,8 @@ async function main() {
   });
 
   console.log("Seeded:");
-  console.log("  staff@y-not.com / password123 (STAFF)");
-  console.log("  client@y-not.com / password123 (CLIENT · Google)");
+  console.log("  staff@y-not.com (STAFF) — use Test Staff on /login");
+  console.log("  client@y-not.com (CLIENT · Google) — use Test Client on /login");
   console.log("  YN-1042 product:", tumbler?.name || "(none)");
   console.log("  YN-1038 product:", apparel?.name || "(none)");
 }

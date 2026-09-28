@@ -22,10 +22,12 @@ Open http://localhost:3000
 
 ## Seed logins
 
-| Email | Password | Portal |
-|---|---|---|
-| staff@y-not.com | password123 | Staff |
-| client@y-not.com | password123 | Client · **Google** |
+Use **Test Client** / **Test Staff** on `/login` (passwords are randomized and not shown in the UI).
+
+| Email | Portal |
+|---|---|
+| staff@y-not.com | Staff |
+| client@y-not.com | Client · **Google** |
 
 New clients sign up at `/signup` — SMTP emails staff + welcome/magic link to the client.
 

@@ -7,6 +7,16 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { LazyChatBubble } from "@/components/chat/lazy-chat-bubble";
+import { DEMO_CLIENT, DEMO_STAFF } from "@/lib/demo-accounts";
+
+function Spinner({ className }: { className?: string }) {
+  return (
+    <span
+      className={`inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent ${className ?? ""}`}
+      aria-hidden
+    />
+  );
+}
 
 export default function LoginPage() {
   return (
@@ -85,18 +95,17 @@ function LoginInner() {
   async function demoLogin(which: "client" | "staff") {
     setError("");
     setDemoLoading(which);
-    const creds =
-      which === "client"
-        ? { email: "client@y-not.com", password: "password123" }
-        : { email: "staff@y-not.com", password: "password123" };
+    const creds = which === "client" ? DEMO_CLIENT : DEMO_STAFF;
+    // Do not fill the password field — keeps the secret out of the UI
     setEmail(creds.email);
-    setPassword(creds.password);
+    setPassword("");
     const res = await signIn("credentials", {
-      ...creds,
+      email: creds.email,
+      password: creds.password,
       redirect: false,
     });
-    setDemoLoading(null);
     if (res?.error) {
+      setDemoLoading(null);
       setError("Demo login failed. Is the seed data loaded?");
       return;
     }
@@ -139,27 +148,38 @@ function LoginInner() {
           <p className="mt-2 text-sm text-slate-500">Staff & client portal</p>
         </div>
 
-        <div className="mb-5 grid grid-cols-2 gap-2">
+        <div className="mb-6 grid grid-cols-2 gap-2">
           <button
             type="button"
             disabled={loading || !!demoLoading}
             onClick={() => void demoLogin("client")}
-            className="rounded-lg border border-orange-200 bg-orange-50 px-3 py-2.5 text-sm font-semibold text-orange-800 hover:bg-orange-100 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2.5 text-sm font-semibold text-orange-800 hover:bg-orange-100 disabled:cursor-wait disabled:opacity-70"
           >
-            {demoLoading === "client" ? "Signing in…" : "Test Client"}
+            {demoLoading === "client" ? (
+              <>
+                <Spinner />
+                Signing in…
+              </>
+            ) : (
+              "Test Client"
+            )}
           </button>
           <button
             type="button"
             disabled={loading || !!demoLoading}
             onClick={() => void demoLogin("staff")}
-            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-100 disabled:cursor-wait disabled:opacity-70"
           >
-            {demoLoading === "staff" ? "Signing in…" : "Test Staff"}
+            {demoLoading === "staff" ? (
+              <>
+                <Spinner />
+                Signing in…
+              </>
+            ) : (
+              "Test Staff"
+            )}
           </button>
         </div>
-        <p className="mb-5 text-center text-[11px] text-slate-400">
-          client@y-not.com / staff@y-not.com · password123
-        </p>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
