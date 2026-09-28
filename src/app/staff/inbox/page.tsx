@@ -94,8 +94,12 @@ export default function InboxPage() {
     selected && selected.status !== "CLOSED" && selected.status !== "CONVERTED";
 
   return (
-    <div className="flex h-full">
-      <div className="flex w-80 flex-col border-r border-slate-200 bg-white">
+    <div className="flex h-full min-h-0 flex-col md:flex-row">
+      <div
+        className={`flex w-full flex-col border-r border-slate-200 bg-white md:w-80 ${
+          selectedId ? "hidden md:flex" : "flex"
+        }`}
+      >
         <div className="border-b border-slate-100 px-4 py-4">
           <h1 className="text-lg font-semibold">Inbox</h1>
           <p className="text-xs text-slate-500">Chat handoffs from clients</p>
@@ -131,17 +135,28 @@ export default function InboxPage() {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col bg-white">
+      <div
+        className={`min-h-0 flex-1 flex-col bg-white ${
+          selectedId ? "flex" : "hidden md:flex"
+        }`}
+      >
         {!selected ? (
           <div className="flex flex-1 items-center justify-center text-slate-400">
             Select a handoff
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 px-6 py-4">
+            <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
+              <button
+                type="button"
+                onClick={() => setSelectedId(null)}
+                className="rounded-lg px-2 py-1 text-sm text-orange-600 hover:bg-orange-50 md:hidden"
+              >
+                ← Inbox
+              </button>
               <div className="min-w-0 flex-1">
                 <h2 className="font-semibold">{selected.visitorName}</h2>
-                <p className="text-sm text-slate-500">
+                <p className="truncate text-sm text-slate-500">
                   {selected.visitorEmail} · {selected.companyName}
                   {selected.claimedBy ? ` · Claimed by ${selected.claimedBy.name}` : ""}
                 </p>
@@ -180,7 +195,7 @@ export default function InboxPage() {
               </LoadingButton>
             </div>
 
-            <div className="flex-1 space-y-3 overflow-auto p-6">
+            <div className="flex-1 space-y-3 overflow-auto p-4 sm:p-6">
               <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700 whitespace-pre-wrap">
                 {selected.summary}
               </div>

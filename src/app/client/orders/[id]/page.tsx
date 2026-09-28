@@ -131,7 +131,7 @@ export default function ClientOrderDetailPage() {
     pendingProposals.length > 0 && ["LEAD", "BRIEF", "QUOTE"].includes(order.status);
 
   return (
-    <div className="flex-1 overflow-auto p-6">
+    <div className="flex-1 overflow-auto p-4 sm:p-6">
       <Link href="/client" className="text-sm text-orange-600 hover:underline">
         ← Orders
       </Link>

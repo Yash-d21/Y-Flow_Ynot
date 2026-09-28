@@ -139,7 +139,7 @@ export default function StaffOrderDetailPage() {
   const canSendProposal = PROPOSAL_STAGES.has(order.status);
 
   return (
-    <div className="flex-1 overflow-auto p-6">
+    <div className="flex-1 overflow-auto p-4 sm:p-6">
       <Link href="/staff" className="text-sm text-orange-600 hover:underline">
         ← Orders
       </Link>

@@ -8,10 +8,5 @@ export default async function StaffLayout({ children }: { children: React.ReactN
     redirect("/login");
   }
 
-  return (
-    <div className="flex h-screen overflow-hidden bg-[#F7F7F8]">
-      <StaffSidebar name={session.user.name} />
-      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</main>
-    </div>
-  );
+  return <StaffSidebar name={session.user.name}>{children}</StaffSidebar>;
 }

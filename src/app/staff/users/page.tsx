@@ -68,7 +68,7 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="flex-1 overflow-auto p-6">
+    <div className="flex-1 overflow-auto p-4 sm:p-6">
       <h1 className="text-xl font-semibold">Users</h1>
       <p className="text-sm text-slate-500">Admin only — create staff and client accounts</p>
 

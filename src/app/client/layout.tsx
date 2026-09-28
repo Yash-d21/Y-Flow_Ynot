@@ -20,16 +20,13 @@ export default async function ClientLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F7F7F8]">
-      <ClientSidebar name={session.user.name} companyName={companyName || "Your company"} />
-      <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-        {children}
-        <LazyChatBubble
-          userName={session.user.name}
-          userEmail={session.user.email}
-          companyName={companyName}
-        />
-      </main>
-    </div>
+    <ClientSidebar name={session.user.name} companyName={companyName || "Your company"}>
+      {children}
+      <LazyChatBubble
+        userName={session.user.name}
+        userEmail={session.user.email}
+        companyName={companyName}
+      />
+    </ClientSidebar>
   );
 }

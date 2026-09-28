@@ -295,7 +295,7 @@ export function ChatBubble({
   return (
     <>
       {open && (
-        <div className="absolute bottom-20 right-5 z-50 flex h-[560px] w-[380px] max-h-[min(560px,70vh)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+        <div className="fixed inset-x-3 bottom-[5.5rem] top-auto z-50 flex h-[min(560px,calc(100dvh-7.5rem))] w-auto flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl sm:absolute sm:inset-x-auto sm:bottom-20 sm:right-5 sm:h-[560px] sm:w-[380px] sm:max-h-[min(560px,70vh)]">
           <div className="flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3">
             <div className="min-w-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -406,7 +406,7 @@ export function ChatBubble({
             return next;
           });
         }}
-        className="absolute bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg hover:bg-orange-600"
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg hover:bg-orange-600 sm:absolute"
         aria-label={open ? "Minimize chat" : "Open chat"}
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}

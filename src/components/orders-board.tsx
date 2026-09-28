@@ -72,9 +72,9 @@ export function OrdersBoard({
   return (
     <div className="flex h-full min-h-0 flex-1">
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-white px-6 py-4">
-          <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
-          <div className="relative ml-auto min-w-[220px] flex-1 max-w-md">
+        <header className="flex flex-col gap-3 border-b border-slate-200 bg-white px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-6 sm:py-4">
+          <h1 className="text-lg font-semibold text-slate-900 sm:text-xl">{title}</h1>
+          <div className="relative w-full min-w-0 flex-1 sm:ml-auto sm:max-w-md sm:min-w-[220px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={q}
@@ -88,14 +88,47 @@ export function OrdersBoard({
           {showNew ? (
             <Link
               href={mode === "staff" ? "/staff/orders/new" : "/client/orders/new"}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-3.5 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-orange-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 sm:w-auto"
             >
               <Plus className="h-4 w-4" /> {mode === "client" ? "Create Order" : "New Order"}
             </Link>
           ) : null}
         </header>
 
-        <div className="flex-1 overflow-auto bg-white">
+        {/* Mobile cards */}
+        <div className="flex-1 space-y-2 overflow-auto bg-slate-50 p-3 md:hidden">
+          {filtered.map((o) => (
+            <button
+              key={o.id}
+              type="button"
+              onClick={() => openOrder(o.id)}
+              className="flex w-full flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3.5 text-left shadow-sm active:bg-slate-50"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-semibold text-slate-900">{o.number}</p>
+                  <p className="mt-0.5 line-clamp-2 text-sm text-slate-700">{o.title}</p>
+                </div>
+                <StatusPill status={o.status} />
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                {mode === "staff" && <span className="truncate">{o.company.name}</span>}
+                {o.deadline ? (
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {format(new Date(o.deadline), "MMM d")}
+                  </span>
+                ) : null}
+              </div>
+            </button>
+          ))}
+          {filtered.length === 0 && (
+            <p className="py-12 text-center text-sm text-slate-400">No orders found</p>
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden flex-1 overflow-auto bg-white md:block">
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 bg-white text-xs uppercase tracking-wide text-slate-400">
               <tr className="border-b border-slate-100">
@@ -164,7 +197,7 @@ export function OrdersBoard({
       </div>
 
       {selected && (
-        <aside className="flex w-[340px] shrink-0 flex-col border-l border-slate-200 bg-white">
+        <aside className="hidden w-[340px] shrink-0 flex-col border-l border-slate-200 bg-white lg:flex">
           <div className="border-b border-slate-100 px-5 py-4">
             <div className="flex items-center justify-between gap-2">
               <h2 className="font-semibold text-slate-900">Order {selected.number}</h2>

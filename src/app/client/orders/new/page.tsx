@@ -164,22 +164,22 @@ function ClientNewOrderInner() {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-      <header className="shrink-0 border-b border-slate-200 bg-white px-6 py-4">
+      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 sm:py-4">
         <Link href="/client" className="text-sm text-orange-600 hover:underline">
           ← Orders
         </Link>
-        <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+        <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-xl font-semibold">Create order</h1>
+            <h1 className="text-lg font-semibold sm:text-xl">Create order</h1>
             <p className="text-sm text-slate-500">
               Choose from the Y-Not in-stock catalog, or submit a fully custom brief.
             </p>
           </div>
-          <div className="flex rounded-lg border border-slate-200 p-0.5 text-sm">
+          <div className="flex w-full rounded-lg border border-slate-200 p-0.5 text-sm sm:w-auto">
             <button
               type="button"
               onClick={() => setMode("catalog")}
-              className={`rounded-md px-3 py-1.5 font-medium ${
+              className={`flex-1 rounded-md px-3 py-1.5 font-medium sm:flex-none ${
                 mode === "catalog" ? "bg-orange-500 text-white" : "text-slate-600"
               }`}
             >
@@ -191,7 +191,7 @@ function ClientNewOrderInner() {
                 setMode("custom");
                 setSelected(null);
               }}
-              className={`rounded-md px-3 py-1.5 font-medium ${
+              className={`flex-1 rounded-md px-3 py-1.5 font-medium sm:flex-none ${
                 mode === "custom" ? "bg-orange-500 text-white" : "text-slate-600"
               }`}
             >
@@ -202,10 +202,10 @@ function ClientNewOrderInner() {
       </header>
 
       {mode === "catalog" ? (
-        <div className="flex min-h-0 flex-1">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-6 py-3">
-              <div className="relative min-w-[200px] flex-1 max-w-md">
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-4 py-3 sm:px-6">
+              <div className="relative min-w-0 flex-1 basis-full sm:min-w-[200px] sm:basis-auto sm:max-w-md">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
                   value={q}
@@ -223,7 +223,7 @@ function ClientNewOrderInner() {
                   setPage(1);
                   setCategory(e.target.value);
                 }}
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="min-w-0 flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm sm:flex-none"
               >
                 <option value="">All categories</option>
                 {categories.map((c) => (
@@ -304,7 +304,7 @@ function ClientNewOrderInner() {
             </div>
           </div>
 
-          <aside className="flex w-[320px] shrink-0 flex-col border-l border-slate-200 bg-white">
+          <aside className="flex max-h-[48vh] w-full shrink-0 flex-col border-t border-slate-200 bg-white lg:max-h-none lg:w-[320px] lg:border-l lg:border-t-0">
             <div className="border-b border-slate-100 px-4 py-3">
               <h2 className="font-semibold text-slate-900">Order details</h2>
             </div>
@@ -391,10 +391,10 @@ function ClientNewOrderInner() {
           </aside>
         </div>
       ) : (
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-4 sm:p-6">
           <form
             onSubmit={submitCustom}
-            className="mx-auto max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-6"
+            className="mx-auto max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-6"
           >
             <p className="text-sm text-slate-500">
               For fully custom products not in the catalog. Staff will send proposals.

@@ -17,7 +17,7 @@ export default async function ClientsPage() {
   });
 
   return (
-    <div className="flex-1 overflow-auto bg-white p-6">
+    <div className="flex-1 overflow-auto bg-white p-4 sm:p-6">
       <h1 className="text-xl font-semibold">Clients</h1>
       <p className="mt-1 text-sm text-slate-500">
         Companies, contacts, and their orders. Click a row for full detail.

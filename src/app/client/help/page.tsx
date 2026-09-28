@@ -1,6 +1,6 @@
 export default function ClientHelpPage() {
   return (
-    <div className="flex-1 overflow-auto bg-white p-6">
+    <div className="flex-1 overflow-auto bg-white p-4 sm:p-6">
       <h1 className="text-xl font-semibold">Help</h1>
       <p className="mt-2 max-w-xl text-sm text-slate-600">
         Use the chat bubble in the bottom-right corner to ask questions or request a human from
