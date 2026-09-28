@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        String         @id @default(cuid())
+  name      String
+  logoUrl   String?
+  createdAt DateTime       @default(now())
+  users     User[]
+  orders    Order[]
+  assets    CompanyAsset[]
+}
+
+model CompanyAsset {
+  id           String   @id @default(cuid())
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  kind         String   // LOGO | BRAND | ARTWORK | OTHER
+  path         String
+  originalName String
+  mimeType     String?
+  sizeBytes    Int?
+  uploadedById String?
+  uploadedBy   User?    @relation("AssetUploader", fields: [uploadedById], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  name         String
+  role         String
+  active       Boolean  @default(true)
+  companyId    String?
+  company      Company? @relation(fields: [companyId], references: [id])
+  createdAt    DateTime @default(now())
+
+  assignedOrders  Order[]         @relation("Assignee")
+  createdOrders   Order[]         @relation("Creator")
+  events          OrderEvent[]
+  files           OrderFile[]
+  companyAssets   CompanyAsset[]  @relation("AssetUploader")
+  proofDecisions  ProofReview[]   @relation("ProofDecider")
+  claimedHandoffs Handoff[]       @relation("HandoffClaimer")
+  magicLinks      MagicLink[]
+  proposals       OrderProposal[] @relation("ProposalAuthor")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  externalId  Int      @unique
+  name        String
+  slug        String   @unique
+  category    String
+  priceLabel  String
+  priceUsd    Float
+  imageUrl    String?
+  localImage  String?
+  storeUrl    String?
+  source      String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  orders      Order[]
+}
+
+model Order {
+  id                 String    @id @default(cuid())
+  number             String    @unique
+  companyId          String
+  company            Company   @relation(fields: [companyId], references: [id])
+  productId          String?
+  product            Product?  @relation(fields: [productId], references: [id])
+  title              String
+  productDescription String
+  quantity           Int       @default(1)
+  unitPriceLabel     String?
+  budget             String?
+  deadline           DateTime?
+  complianceNotes    String?
+  brandingNotes      String?
+  status             String    @default("LEAD")
+  assigneeId         String?
+  assignee           User?     @relation("Assignee", fields: [assigneeId], references: [id])
+  createdById        String
+  createdBy          User      @relation("Creator", fields: [createdById], references: [id])
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  events       OrderEvent[]
+  files        OrderFile[]
+  proofReviews ProofReview[]
+  proposals    OrderProposal[]
+  handoffs     Handoff[]
+  magicLinks   MagicLink[]
+}
+
+model OrderEvent {
+  id            String   @id @default(cuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  actorId       String?
+  actor         User?    @relation(fields: [actorId], references: [id])
+  type          String
+  message       String
+  fromStatus    String?
+  toStatus      String?
+  clientVisible Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model OrderFile {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  kind         String
+  path         String
+  originalName String
+  mimeType     String?
+  sizeBytes    Int?
+  uploadedById String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+model OrderProposal {
+  id          String    @id @default(cuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  title       String
+  details     String
+  price       String?
+  leadTime    String?
+  status      String    @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  createdById String
+  createdBy   User      @relation("ProposalAuthor", fields: [createdById], references: [id])
+  decidedAt   DateTime?
+  clientNote  String?
+  createdAt   DateTime  @default(now())
+}
+
+model ProofReview {
+  id          String    @id @default(cuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status      String    @default("PENDING")
+  clientNote  String?
+  decidedById String?
+  decidedBy   User?     @relation("ProofDecider", fields: [decidedById], references: [id])
+  decidedAt   DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model ChatSession {
+  id           String        @id @default(cuid())
+  userId       String?
+  visitorName  String?
+  visitorEmail String?
+  companyName  String?
+  status       String        @default("OPEN")
+  createdAt    DateTime      @default(now())
+  messages     ChatMessage[]
+  handoff      Handoff?
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  createdAt DateTime    @default(now())
+}
+
+model Handoff {
+  id           String      @id @default(cuid())
+  sessionId    String      @unique
+  session      ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  status       String      @default("OPEN")
+  summary      String
+  visitorEmail String?
+  visitorName  String?
+  companyName  String?
+  claimedById  String?
+  claimedBy    User?       @relation("HandoffClaimer", fields: [claimedById], references: [id])
+  orderId      String?
+  order        Order?      @relation(fields: [orderId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model MagicLink {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  email     String
+  purpose   String
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  orderId   String?
+  order     Order?    @relation(fields: [orderId], references: [id])
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}

@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Y-Flow
 
-## Getting Started
+Local Next.js portals for Y-Not Design & Manufacturing.
 
-First, run the development server:
+- **Staff / Admin portal** — orders, stage filters, inbox (chat handoffs), clients, users
+- **Client portal** — my orders, approvals, files, help + **Claude chat bubble** (client only)
+- **Local SQLite + disk files** · **SMTP** · **magic links** for login / proof review
+
+## Setup
 
 ```bash
+cd web
+npm install
+cp .env.example .env
+# set AUTH_SECRET, ANTHROPIC_API_KEY, SMTP_* as needed
+npm run db:push
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seed logins
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Email | Password | Portal |
+|---|---|---|
+| staff@y-not.com | password123 | Staff |
+| client@y-not.com | password123 | Client · **Google** |
 
-## Learn More
+New clients sign up at `/signup` — SMTP emails staff + welcome/magic link to the client.
 
-To learn more about Next.js, take a look at the following resources:
+Clients create orders from **Catalog / Create Order** — pick from **136** in-stock Y-Not Premium Brands SKUs (imported from `y-not-export`) or submit a custom brief.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Env
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `DATABASE_URL` — `file:./dev.db`
+- `AUTH_SECRET` — session secret
+- `ANTHROPIC_API_KEY` — Claude for client chat (optional; falls back to knowledge snippets)
+- `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` — real email. If `SMTP_HOST` is empty/unset, mail is logged to the console (dry-run).
+- `APP_URL` — base URL for magic links
 
-## Deploy on Vercel
+## Key flows
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Client signs up at `/signup` or logs in at `/login`
+2. Staff creates/moves orders; status **PROOF** emails clients a magic link
+3. Client opens Approvals / order detail → Approve Proof or Request Changes
+4. Client chat bubble → Hand to human → Staff Inbox → Convert to order

@@ -1,8 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -11,31 +9,32 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage
 
-# next.js
-/.next/
-/out/
+# next
+.next/
+out/
+build
+dist
 
-# production
-/build
+# env / secrets
+.env
+.env*.local
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# debug / os
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
+.DS_Store
+*.pem
 
 # typescript
-*.tsbuildinfo
 next-env.d.ts
+*.tsbuildinfo
+
+# local uploads (keep folder)
+storage/**
+!storage/.gitkeep
+
+# prisma journals only (seed DB is committed for Vercel demo)
+prisma/dev.db-journal
