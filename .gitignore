@@ -38,3 +38,6 @@ storage/**
 
 # prisma journals only (seed DB is committed for Vercel demo)
 prisma/dev.db-journal
+
+.vercel
+.env*

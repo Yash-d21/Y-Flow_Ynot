@@ -1,5 +1,8 @@
-import { auth } from "@/lib/auth";
+import NextAuth from "next-auth";
+import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
+
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { pathname, search } = req.nextUrl;
@@ -36,7 +39,6 @@ export default auth((req) => {
         : role === "CLIENT"
           ? "/client"
           : "/staff";
-    // Role mismatch: always send to the right portal home
     if (role === "CLIENT" && safe.startsWith("/staff")) {
       return NextResponse.redirect(new URL("/client", req.url));
     }
